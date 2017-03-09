@@ -1,4 +1,4 @@
-package webscrapping;
+package kz.webscrapping;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,7 +40,7 @@ public class WebScrapper {
             webClient.getOptions().setJavaScriptEnabled(false);
             // Начинаем со страницы магазина
             HtmlPage page = webClient.getPage("https://tentorium.ru/internet-magazin");
-            // Сраницы подкатегорий
+            // Страницы подкатегорий
             HtmlPage pages, productpage;
 
 //            final String pageAsXml = page.asXml();

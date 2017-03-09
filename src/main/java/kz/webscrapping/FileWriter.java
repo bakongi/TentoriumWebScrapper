@@ -1,4 +1,4 @@
-package webscrapping;
+package kz.webscrapping;
 
 import java.io.*;
 

@@ -1,4 +1,4 @@
-package webscrapping;
+package kz.webscrapping;
 
 /**
  * Created by KBadashvili on 007 07.03.17.
