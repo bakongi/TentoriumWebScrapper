@@ -147,7 +147,7 @@ public class Scrapper implements Runnable {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
             System.out.print("Процесс не может получить доступ к файлу, так как этот файл занят другим процессом");
-//            e.printStackTrace();
+            e.printStackTrace();
         }
 
         try (final WebClient webClient = new WebClient()) {
@@ -226,7 +226,7 @@ public class Scrapper implements Runnable {
                                 this.productDescription = itemDescription.asText().replace(";", ".").replace("\n", "").replace("\r", ""); // удаляем переходы на новую строку
                                 this.productAttributes = attributes.replace("\n", "").replace("\r", "");
                                 if (itemIngredients == null) {
-                                    System.out.println("У продукта \"" + itemTitle.asText() + "\" нет ингридиентов");
+                                    System.out.println("У продукта \"" + itemTitle.asText() + "\" нет ингредиентов");
                                     this.productIngredients = "none";
                                 } else {
                                     this.productIngredients = itemIngredients.asText().replace(";", ".").replaceAll("   ", ", ").replace("\n", "").replace("\r", ", ");
