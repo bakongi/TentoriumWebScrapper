@@ -7,10 +7,14 @@ package kz.webscrapping;
 public class WebScrapper {
 
     public static void main(String[] args) throws Exception {
+
+        Parser parser = new Parser(args);
         Scrapper scrapper = new Scrapper();
-        scrapper.setFilePath("D:/Java/Tentorium/");
-        scrapper.setFileName("ExportedItems" + ".csv");
+
+        scrapper.setFilePath(parser.getPath());
+        scrapper.setFileName(parser.getFilename() + ".csv");
         scrapper.setEncoding("Cp1251");
+
         scrapper.run();
     }
 }

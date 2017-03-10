@@ -3,11 +3,14 @@ package kz.webscrapping;
 import com.gargoylesoftware.htmlunit.html.HtmlImage;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
  * Created by KBadashvili on 007 07.03.17.
+ * should look at
+ * http://super-csv.github.io/super-csv/index.html
  */
 public class FileWriter {
 
@@ -16,6 +19,7 @@ public class FileWriter {
     private String encoding = "Cp1251";
     private String delimiter = ";";
     private volatile BufferedWriter writerItem;
+    private Encoder encoder = new Encoder();
 
     public BufferedWriter getWriterItem() {
         return writerItem;
@@ -78,18 +82,18 @@ public class FileWriter {
             // Создаем директории и называем их именами категорий. Будем сохранять туда изображения
             try {
                 if (Files.exists(Paths.get(this.filePath + catalogTitle.replace("/", " и")))) {
-                    System.out.println("Директория \"" + catalogTitle.replace("/", " и") + "\" уже создана ");
+                    System.out.println(encoder.convert("Директория \"" + catalogTitle.replace("/", " и") + "\" уже создана "));
                 } else {
-                    System.out.println("Создаем директорию \"" + catalogTitle.replace("/", " и") + "\"    " + Paths.get(this.filePath + catalogTitle.replace("/", " и")));
+                    System.out.println(encoder.convert("Создаем директорию \"" +  catalogTitle.replace("/", " и") + "\"    " + Paths.get(this.filePath + catalogTitle.replace("/", " и"))));
                     Files.createDirectory(Paths.get(this.filePath + catalogTitle.replace("/", " и")));
                 }
             } catch (Exception e) {
-                System.out.println("Попытка создать директорию... Что-то пошло не так...");
+                System.out.println(encoder.convert("Попытка создать директорию... Что-то пошло не так..."));
                 e.printStackTrace();
             }
 
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Кодировка не поддерживается");
+            System.out.println(encoder.convert("Кодировка не поддерживается"));
             e.printStackTrace();
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден");
@@ -114,7 +118,7 @@ public class FileWriter {
         try {
 
             if (Files.exists(Paths.get(this.filePath + productCatalogName.replace("/", " и") + "/" + productName + ".png"))) {
-                System.out.println("Файл: \"" + productName + ".png" +"\" уже создан!" );
+                System.out.println(encoder.convert("Файл: \"" + productName + ".png" +"\" уже создан!"));
             }
 
             File imageFile = new File(this.filePath + productCatalogName.replace("/", " и") + "/" + productName + ".png");
@@ -122,7 +126,7 @@ public class FileWriter {
                 productImage.saveAs(imageFile);
             }
 
-            System.out.println("Записываем данные в " + fileName);
+            System.out.println(encoder.convert("Записываем данные в " + this.fileName));
             writerItem.append(productCatalogName)
                     .append(delimiter)
                     .append(productName).append(delimiter)
@@ -141,6 +145,6 @@ public class FileWriter {
 
     void close() throws IOException {
         this.writerItem.close();
-        System.out.println("Закрываем поток...");
+        System.out.println(encoder.convert("Закрываем поток..."));
     }
 }

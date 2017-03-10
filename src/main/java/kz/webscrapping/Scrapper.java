@@ -17,6 +17,7 @@ public class Scrapper implements Runnable {
     private String filePath;
     private String fileName;
     private String encoding = "Cp1251";
+    private Encoder encoder = new Encoder();
 
     private String catalogTitle = "";
     private String productTitle = "";
@@ -136,7 +137,7 @@ public class Scrapper implements Runnable {
     HtmlImage itemImage = null;
 
     @Override
-    synchronized public void run() {
+    public void run() {
         FileWriter writer = null;
         try {
             writer = new FileWriter();
@@ -146,7 +147,11 @@ public class Scrapper implements Runnable {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
-            System.out.print("Процесс не может получить доступ к файлу, так как этот файл занят другим процессом");
+            try {
+                System.out.print(encoder.convert("Процесс не может получить доступ к файлу, так как этот файл занят другим процессом"));
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
 
@@ -166,7 +171,7 @@ public class Scrapper implements Runnable {
                 /*
                 * Первый уровень - каталог
                  */
-                System.out.println("Понеслась!");
+                System.out.println(encoder.convert("Понеслась!"));
                 for(HtmlElement htmlItem : catalog){
                     HtmlElement title = ((HtmlElement) htmlItem.getFirstByXPath(".//div[@class='organizm_category_item']/b")); // Заголовок
                     //get image
@@ -210,7 +215,7 @@ public class Scrapper implements Runnable {
                             HtmlImage itemImage = ((HtmlImage) item.getFirstByXPath(".//div[@class='product-images']/a/img")); // Картинка
 
                             if (itemImage == null) {
-                                System.out.println("У продукта \"" + itemTitle.asText() + "\" нет зображения");
+                                System.out.println(encoder.convert("У продукта \"" + itemTitle.asText() + "\" нет зображения"));
                             }
 
                             // Загоняем в строку список из "области применения".
@@ -226,19 +231,19 @@ public class Scrapper implements Runnable {
                                 this.productDescription = itemDescription.asText().replace(";", ".").replace("\n", "").replace("\r", ""); // удаляем переходы на новую строку
                                 this.productAttributes = attributes.replace("\n", "").replace("\r", "");
                                 if (itemIngredients == null) {
-                                    System.out.println("У продукта \"" + itemTitle.asText() + "\" нет ингредиентов");
+                                    System.out.println(encoder.convert("У продукта \"" + itemTitle.asText() + "\" нет ингредиентов"));
                                     this.productIngredients = "none";
                                 } else {
                                     this.productIngredients = itemIngredients.asText().replace(";", ".").replaceAll("   ", ", ").replace("\n", "").replace("\r", ", ");
                                 }
                                 if (itemUse == null) {
-                                    System.out.println("У продукта \"" + itemTitle.asText() + "\" нет инструкции");
+                                    System.out.println(encoder.convert("У продукта \"" + itemTitle.asText() + "\" нет инструкции"));
                                     this.productUse = "none";
                                 } else {
                                     this.productUse = itemUse.asText().replace(";", ".").replace("\n", "").replace("\r", "");
                                 }
                                 if (itemDocumentation == null) {
-                                    System.out.println("У продукта \"" + itemTitle.asText() + "\" нет документации");
+                                    System.out.println(encoder.convert("У продукта \"" + itemTitle.asText() + "\" нет документации"));
                                     this.productDocumentation = "none";
                                 } else {
                                     this.productDocumentation = itemDocumentation.getAttribute("href");
@@ -256,7 +261,7 @@ public class Scrapper implements Runnable {
                                         itemImage,
                                         this.delimiter);
                             } catch (NullPointerException e) {
-                                System.out.println("Какая-то хрень c продуктом " + itemTitle.asText());
+                                System.out.println(encoder.convert("Какая-то хрень c продуктом " + itemTitle.asText()));
                             }
                         }
                     }
